@@ -959,6 +959,9 @@ class GGUFWriter:
     def add_sliding_window(self, value: int) -> None:
         self.add_uint32(Keys.Attention.SLIDING_WINDOW.format(arch=self.arch), value)
 
+    def add_dflash_type(self, value: str) -> None:
+        self.add_string(Keys.LLM.DFLASH_TYPE.format(arch=self.arch), value)
+
     def add_block_size(self, value: int) -> None:
         self.add_uint32(Keys.LLM.BLOCK_SIZE.format(arch=self.arch), value)
 

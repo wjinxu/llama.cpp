@@ -1256,19 +1256,18 @@ struct llama_model_eagle3 : public llama_model_base {
 };
 
 
+// DFlash/DSpark block-diffusion draft; each DFlash type (backbone family) lives in
+// its backbone's own model file (Qwen3-style in qwen3.cpp) -- see dflash-base.h
 struct llama_model_dflash : public llama_model_base {
     llama_model_dflash(const struct llama_model_params & params) : llama_model_base(params) {}
     void load_arch_hparams(llama_model_loader & ml) override;
     void load_arch_tensors(llama_model_loader & ml) override;
 
-    template <bool is_enc>
-    struct graph : public llm_graph_context {
-        graph(const llama_model & model, const llm_graph_params & params);
-
-        ggml_tensor * build_inp_embd_enc() const;
-    };
-
     std::unique_ptr<llm_graph_context> build_arch_graph(const llm_graph_params & params) const override;
+
+    const struct llm_dflash_type * dflash_type = nullptr;
+
+    uint32_t block_size = 0;
 };
 
 

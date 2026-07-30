@@ -665,6 +665,8 @@ class DFlashModel(Qwen3Model):
     def set_gguf_parameters(self):
         super().set_gguf_parameters()
 
+        self.gguf_writer.add_dflash_type("qwen3")
+
         block_size = self.hparams.get("block_size", 16)
         self.gguf_writer.add_block_size(block_size)
         dflash_config = self.hparams.get("dflash_config", {})

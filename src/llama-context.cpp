@@ -1245,9 +1245,12 @@ bool llama_context::set_sampler(llama_seq_id seq_id, llama_sampler * sampler) {
 
         sampler->iface->backend_init(sampler, buft, cparams.n_outputs_max_per_seq);
 
-        sampling.samplers[seq_id] = sampler;
+        // only reserve when backend sampling becomes active - re-attached samplers reuse the reserved buffers
+        if (sampling.samplers.empty()) {
+            sched_need_reserve = true;
+        }
 
-        sched_need_reserve = true;
+        sampling.samplers[seq_id] = sampler;
 
         return true;
     }
@@ -1264,9 +1267,8 @@ bool llama_context::set_sampler(llama_seq_id seq_id, llama_sampler * sampler) {
         return false;
     }
 
+    // no reserve needed - clearing a sampler only makes the reserved graphs oversized
     sampling.samplers.erase(seq_id);
-
-    sched_need_reserve = true;
 
     return true;
 }

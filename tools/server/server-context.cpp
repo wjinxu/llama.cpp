@@ -397,8 +397,6 @@ struct server_slot {
 
         n_predict_max = -1;
 
-        llama_set_sampler(ctx_tgt, id, nullptr);
-
         // clear alora start
         alora_invocation_start = -1;
 
@@ -1801,6 +1799,8 @@ private:
             }
         } else {
             slot.smpl.reset();
+
+            llama_set_sampler(ctx_tgt, slot.id, nullptr);
         }
 
         // the per-request limit takes priority over the global one
